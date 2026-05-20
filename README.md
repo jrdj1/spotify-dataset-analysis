@@ -18,7 +18,7 @@ Pipeline de ingesta masiva y panel web MVC sobre 3,7 millones de registros del d
 ## Estructura del repositorio
 
 ```
-sporify-dataset-analysis/
+spotify-dataset-analysis/
 ├── README.md
 ├── Informe.docx               ← informe técnico completo
 ├── Presentacion.pptx          ← presentación (12 diapositivas)
@@ -59,8 +59,8 @@ sporify-dataset-analysis/
 
 ```bash
 # 1. Clonar el repositorio
-git clone https://github.com/jrdj1/sporify-dataset-analysis.git
-cd sporify-dataset-analysis
+git clone https://github.com/jrdj1/spotify-dataset-analysis.git
+cd spotify-dataset-analysis
 
 # 2. Crear la base de datos (MySQL 8.0, local_infile = ON)
 mysql -u root -p < data_model/scripts_bd/script_creacion_bd_optimizada.sql
