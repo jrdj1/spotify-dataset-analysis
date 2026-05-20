@@ -1,0 +1,2 @@
+# Driver oficial de MySQL para Python
+mysql-connector-python>=8.0.30

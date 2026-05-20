@@ -1,0 +1,18 @@
+# .htaccess — spotify_cm · Front Controller unificado
+Options -Indexes
+
+# Bloquear acceso directo a todas las clases PHP
+<FilesMatch "^(Conexion|MantenimientoModel|MantenimientoController|MantenimientoView|VisualizacionesModel|VisualizacionesController|VisualizacionesView)\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Todo pasa por el Front Controller
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /spotify_cm/
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>
