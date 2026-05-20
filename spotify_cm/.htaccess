@@ -1,6 +1,12 @@
 # .htaccess — spotify_cm · Front Controller unificado
 Options -Indexes
 
+# Bloquear acceso HTTP directo al fichero de configuración
+<FilesMatch "^\.env">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
 # Bloquear acceso directo a todas las clases PHP
 <FilesMatch "^(Conexion|MantenimientoModel|MantenimientoController|MantenimientoView|VisualizacionesModel|VisualizacionesController|VisualizacionesView)\.php$">
     Order Allow,Deny
