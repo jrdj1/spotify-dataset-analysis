@@ -11,7 +11,7 @@
  *  - PDO::ATTR_EMULATE_PREPARES = false → las sentencias preparadas son reales
  *    (el servidor MySQL hace el parsing), no emuladas por PDO. Esto elimina
  *    por diseño los vectores de SQL Injection.
- *  - Credenciales cargadas desde spotify_cm/.env (nunca en el repositorio).
+ *  - Credenciales en un único lugar; en producción moverlas a .env.
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
@@ -19,6 +19,14 @@ declare(strict_types=1);
 
 class Conexion
 {
+    // ── Parámetros de conexión ──────────────────────────────────────────────
+    private const DB_HOST    = '127.0.0.1';   // localhost vía túnel SSH
+    private const DB_PORT    = '3306';
+    private const DB_NAME    = 'spotify_cm';
+    private const DB_USER    = 'root';
+    private const DB_PASS    = 'mycontGI_7_6';
+    private const DB_CHARSET = 'utf8mb4';
+
     /** Única instancia PDO compartida en toda la petición */
     private static ?PDO $instancia = null;
 
@@ -29,29 +37,6 @@ class Conexion
     private function __clone() {}
 
     /**
-     * Lee el fichero .env de la misma carpeta y carga cada KEY=VALUE
-     * como variable de entorno del proceso (si no estaba ya definida).
-     */
-    private static function cargarEnv(): void
-    {
-        $envFile = __DIR__ . '/.env';
-        if (!is_readable($envFile)) {
-            return;
-        }
-        foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $linea) {
-            $linea = trim($linea);
-            if ($linea === '' || str_starts_with($linea, '#')) {
-                continue;
-            }
-            [$clave, $valor] = array_map('trim', explode('=', $linea, 2));
-            if (!isset($_ENV[$clave])) {
-                $_ENV[$clave] = $valor;
-                putenv("$clave=$valor");
-            }
-        }
-    }
-
-    /**
      * Devuelve (o crea) la instancia PDO.
      *
      * @throws PDOException Si la conexión falla.
@@ -59,13 +44,12 @@ class Conexion
     public static function obtenerConexion(): PDO
     {
         if (self::$instancia === null) {
-            self::cargarEnv();
-
             $dsn = sprintf(
-                'mysql:host=%s;port=%s;dbname=%s;charset=utf8mb4',
-                getenv('DB_HOST') ?: '127.0.0.1',
-                getenv('DB_PORT') ?: '3306',
-                getenv('DB_NAME') ?: 'spotify_cm'
+                'mysql:host=%s;port=%s;dbname=%s;charset=%s',
+                self::DB_HOST,
+                self::DB_PORT,
+                self::DB_NAME,
+                self::DB_CHARSET
             );
 
             $opciones = [
@@ -80,12 +64,7 @@ class Conexion
                     "SET NAMES 'utf8mb4' COLLATE 'utf8mb4_spanish_ci'",
             ];
 
-            self::$instancia = new PDO(
-                $dsn,
-                getenv('DB_USER') ?: 'root',
-                getenv('DB_PASS') ?: '',
-                $opciones
-            );
+            self::$instancia = new PDO($dsn, self::DB_USER, self::DB_PASS, $opciones);
         }
 
         return self::$instancia;
