@@ -13,7 +13,7 @@ Pipeline modular en Python para la carga masiva de ~3,7 millones de registros en
 | `2_poblar_usuarios.py` | Carga `ListaUsuarios.csv` → tabla `usuarios` + desnormaliza `poblacion`/`provincia` |
 | `3_poblar_canciones.py` | Carga `spotify_data.csv` → tabla `canciones` (NFC + `@dummy` para índice pandas) |
 | `4_poblar_favoritas.py` | Carga `favoritas.csv` → tabla `favoritas` + desnormaliza `poblacion`/`artist_name` |
-| `generar_favoritas.py` | Genera sintéticamente los CSVs de usuarios, direcciones y favoritas |
+| `generar_favoritas.py` | Script auxiliar de generación sintética de datos (no forma parte del pipeline) |
 | `db_config.py` | Credenciales y rutas centralizadas — **editar antes de ejecutar** |
 | `requirements.txt` | Dependencias Python |
 | `data/` | Carpeta de CSVs — **no incluida en el repo** (ver más abajo) |
@@ -22,17 +22,15 @@ Pipeline modular en Python para la carga masiva de ~3,7 millones de registros en
 
 ## Obtener los datos
 
-Los CSVs no están en el repositorio por su tamaño. Hay que obtenerlos antes de ejecutar el pipeline.
+Los CSVs no están en el repositorio por su tamaño (~258 MB). Son los ficheros
+proporcionados por los profesores y deben colocarse manualmente en `etl/data/`:
 
-**`spotify_data.csv`** (~168 MB)  
-Descargar de Kaggle y colocar en `etl/data/`:  
-→ https://www.kaggle.com/datasets/vatsalmavani/spotify-dataset
-
-**`ListaDirecciones.csv`, `ListaUsuarios.csv`, `favoritas.csv`** (generados)  
-Ejecutar el script de generación:
-```bash
-python generar_favoritas.py
-# Los CSVs se crean automáticamente en data/
+```
+etl/data/
+├── spotify_data.csv       (168 MB)
+├── ListaUsuarios.csv      ( 15 MB)
+├── ListaDirecciones.csv   (  6,9 MB)
+└── favoritas.csv          ( 69 MB)
 ```
 
 ---
