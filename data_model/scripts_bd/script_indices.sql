@@ -10,6 +10,7 @@ USE spotify_cm;
 -- Resuelve el JOIN complejo en una sola tabla sin tocar usuarios ni canciones
 -- Orden: poblacion primero (filtro WHERE), artist_name segundo (GROUP BY)
 -- ------------------------------------------------------------
+DROP INDEX IF EXISTS idx_fav_pob_artist ON favoritas;
 CREATE INDEX idx_fav_pob_artist
     ON favoritas(poblacion, artist_name);
 
@@ -19,9 +20,11 @@ CREATE INDEX idx_fav_pob_artist
 -- Sustituye LIKE '%texto%' (no usa B-Tree) por MATCH() AGAINST()
 -- Útil para búsquedas tipo: buscar artistas con 'Boyce' en el nombre
 -- ------------------------------------------------------------
+DROP INDEX IF EXISTS ft_canciones_artist ON canciones;
 CREATE FULLTEXT INDEX ft_canciones_artist
     ON canciones(artist_name);
 
+DROP INDEX IF EXISTS ft_canciones_track ON canciones;
 CREATE FULLTEXT INDEX ft_canciones_track
     ON canciones(track_name);
 
@@ -31,6 +34,7 @@ CREATE FULLTEXT INDEX ft_canciones_track
 -- ORDER BY popularity DESC LIMIT N sin filesort
 -- MySQL 8+ soporta índices descendentes nativamente
 -- ------------------------------------------------------------
+DROP INDEX IF EXISTS idx_canciones_popularity ON canciones;
 CREATE INDEX idx_canciones_popularity
     ON canciones(popularity DESC);
 
